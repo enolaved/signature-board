@@ -28,13 +28,19 @@ class SignatureBoard {
       this.ctx.moveTo(e.offsetX, e.offsetY)
     })
     canvas.addEventListener('mousemove', (e) => {
-      this.ctx.lineTo(e.offsetX, e.offsetY)
-      this.ctx.lineWidth = 2
-      this.ctx.strokeStyle = dft.strokeStyle
-      this.ctx.stroke()
+      requestAnimationFrame(() => {
+        this.draw(e.offsetX, e.offsetY)
+      })
     })
     canvas.addEventListener('mouseleave', () => {
       this.ctx.closePath()
     })
+  }
+
+  draw(x, y) {
+    this.ctx.lineTo(x, y)
+    this.ctx.lineWidth = 2
+    this.ctx.strokeStyle = dft.strokeStyle
+    this.ctx.stroke()
   }
 }
