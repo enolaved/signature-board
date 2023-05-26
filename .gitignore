@@ -1,0 +1,9 @@
+# Editor
+.idea
+.vscode
+
+# Project
+node_modules
+dist
+
+*.log
