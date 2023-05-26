@@ -1,46 +1,75 @@
 const dft = {
   fillStyle: 'black',
-  strokeStyle: 'red'
+  strokeStyle: 'red',
+  lineWidth: 2,
+  imgType: 'image/PNG'
 }
 
 class SignatureBoard {
-  constructor(el) {
-    this.parent = el
+  constructor(el, opts) {
+    // canvas context
     this.ctx = null
-    const parentW = this.parent.clientWidth
-    const parentH = this.parent.clientHeight
-    const canvas = document.createElement('canvas')
-    canvas.width = parentW
-    canvas.height = parentH
-    canvas.id = '$$signature'
-    this.parent.appendChild(canvas)
+    this.opts = opts || {}
+    this.canDraw = false
 
-    if (canvas.getContext('2d')) {
-      this.ctx = canvas.getContext('2d')
-      this.ctx.fillStyle = dft.fillStyle
-      this.ctx.fillRect(0, 0, parentW, parentH)
+    const parentW = el.clientWidth
+    const parentH = el.clientHeight
+
+    this.canvas = document.createElement('canvas')
+    this.canvas.width = parentW
+    this.canvas.height = parentH
+
+    el.appendChild(this.canvas)
+
+    if (this.canvas.getContext('2d')) {
+      this.ctx = this.canvas.getContext('2d')
+      this.initCanvas()
     } else {
       throw Error('The browser dont support canvas!')
     }
 
-    canvas.addEventListener('mouseenter', (e) => {
+    this.canvas.addEventListener('mousedown', (e) => {
+      this.canDraw = true
       this.ctx.beginPath()
       this.ctx.moveTo(e.offsetX, e.offsetY)
     })
-    canvas.addEventListener('mousemove', (e) => {
+    this.canvas.addEventListener('mousemove', (e) => {
+      if (!this.canDraw) return
       requestAnimationFrame(() => {
         this.draw(e.offsetX, e.offsetY)
       })
     })
-    canvas.addEventListener('mouseleave', () => {
+    this.canvas.addEventListener('mouseup', () => {
       this.ctx.closePath()
+      this.canDraw = false
     })
+  }
+
+  initCanvas() {
+    this.ctx.fillStyle = this.opts.fillStyle ?? dft.fillStyle
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
   }
 
   draw(x, y) {
     this.ctx.lineTo(x, y)
-    this.ctx.lineWidth = 2
-    this.ctx.strokeStyle = dft.strokeStyle
+    this.ctx.lineWidth = this.opts.lineWidth ?? dft.lineWidth
+    this.ctx.strokeStyle = this.opts.strokeStyle ?? dft.strokeStyle
     this.ctx.stroke()
+  }
+
+  getDataUrl() {
+    return this.canvas.toDataURL(this.opts.imgType ?? dft.imgType)
+  }
+
+  downloadImg() {
+    const url = this.getDataUrl()
+    const aTag = document.createElement('a')
+    aTag.download = 'true'
+    aTag.href = url
+    aTag.click()
+  }
+
+  clear() {
+    this.initCanvas()
   }
 }

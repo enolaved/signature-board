@@ -10,22 +10,48 @@
 <style>
   html,
   body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100vw;
-      height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
   }
-  #root {
-      width: 200px;
-      height: 200px;
+  #container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  #signature {
+    width: 200px;
+    height: 200px;
   }
 </style>
 <body>
-<div id="root"></div>
+<div id="container">
+  <div id="signature"></div>
+  <br>
+  <button onclick="downloadImg()">download img</button>
+  <br>
+  <button onclick="getDataUrl()">getDataURl</button>
+  <br>
+  <button onclick="clearRect()">clearRect</button>
+</div>
 <script src="./src/index.js"></script>
 <script>
-  new SignatureBoard(document.getElementById("root"))
+  const o = new SignatureBoard(document.getElementById("signature"), {
+    lineWidth: 5,
+    fillStyle: 'blue'
+  })
+  function downloadImg() {
+    o.downloadImg()
+  }
+  function getDataUrl() {
+    console.log(o.getDataUrl())
+  }
+  function clearRect() {
+    o.clear()
+  }
 </script>
 </body>
 </html>
