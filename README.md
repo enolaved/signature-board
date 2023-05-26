@@ -1,3 +1,3 @@
 # Signature-Board
 
-A simple signature board component
+A simple signature board demo
