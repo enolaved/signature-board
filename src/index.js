@@ -5,6 +5,11 @@ const dft = {
   imgType: 'image/PNG'
 }
 
+const pcEvent = ['mousedown', 'mousemove', 'mouseup']
+const h5Event = ['touchstart', 'touchmove', 'touchend']
+
+const isMobile = () => window.ontouchstart !== undefined
+
 class SignatureBoard {
   constructor(el, opts) {
     // canvas context
@@ -21,6 +26,8 @@ class SignatureBoard {
 
     el.appendChild(this.canvas)
 
+    const eventList = isMobile() ? h5Event : pcEvent
+
     if (this.canvas.getContext('2d')) {
       this.ctx = this.canvas.getContext('2d')
       this.initCanvas()
@@ -28,18 +35,18 @@ class SignatureBoard {
       throw Error('The browser dont support canvas!')
     }
 
-    this.canvas.addEventListener('mousedown', (e) => {
+    this.canvas.addEventListener(eventList[0], (e) => {
       this.canDraw = true
       this.ctx.beginPath()
       this.ctx.moveTo(e.offsetX, e.offsetY)
     })
-    this.canvas.addEventListener('mousemove', (e) => {
+    this.canvas.addEventListener(eventList[1], (e) => {
       if (!this.canDraw) return
       requestAnimationFrame(() => {
         this.draw(e.offsetX, e.offsetY)
       })
     })
-    this.canvas.addEventListener('mouseup', () => {
+    this.canvas.addEventListener(eventList[2], () => {
       this.ctx.closePath()
       this.canDraw = false
     })
