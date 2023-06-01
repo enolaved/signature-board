@@ -10,6 +10,12 @@ const h5Event = ['touchstart', 'touchmove', 'touchend']
 
 const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 
+function getxy(e) {
+  if (!isMobile) return [e.offsetX, e.offsetY]
+  return [e.touches[0].pageX- e.target.offsetLeft, e.touches[0].pageY- e.target.offsetTop]
+}
+
+
 class SignatureBoard {
   constructor(el, opts) {
     // canvas context
@@ -36,14 +42,17 @@ class SignatureBoard {
     }
 
     this.canvas.addEventListener(eventList[0], (e) => {
+      const [x, y] = getxy(e)
       this.canDraw = true
       this.ctx.beginPath()
-      this.ctx.moveTo(e.offsetX, e.offsetY)
+      this.ctx.moveTo(x, y)
     })
     this.canvas.addEventListener(eventList[1], (e) => {
+      e.preventDefault()
       if (!this.canDraw) return
       requestAnimationFrame(() => {
-        this.draw(e.offsetX, e.offsetY)
+        const [x, y] = getxy(e)
+        this.draw(x, y)
       })
     })
     this.canvas.addEventListener(eventList[2], () => {
