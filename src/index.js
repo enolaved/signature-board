@@ -8,7 +8,7 @@ const dft = {
 const pcEvent = ['mousedown', 'mousemove', 'mouseup']
 const h5Event = ['touchstart', 'touchmove', 'touchend']
 
-const isMobile = () => window.ontouchstart !== undefined
+const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 
 class SignatureBoard {
   constructor(el, opts) {
