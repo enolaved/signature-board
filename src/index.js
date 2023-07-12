@@ -11,7 +11,7 @@ const h5Event = ['touchstart', 'touchmove', 'touchend']
 const isMobile = () => /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 
 function getxy(e) {
-  if (!isMobile) return [e.offsetX, e.offsetY]
+  if (!isMobile()) return [e.offsetX, e.offsetY]
   return [e.touches[0].pageX- e.target.offsetLeft, e.touches[0].pageY- e.target.offsetTop]
 }
 
